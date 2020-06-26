@@ -19,17 +19,21 @@ exports.up = async function (knex) {
   await knex.schema.createTable("ingredients", (table) => {
     table.increments("id");
     table.text("name").notNull();
+  });
+
+  await knex.schema.createTable("recipe_ingredients", (table) => {
     table
       .integer("recipe_id")
       .references("id")
       .inTable("recipes")
       .onDelete("SET NULL")
       .onUpdate("CASCADE");
-  });
-
-  await knex.schema.createTable("recipe_ingredients", (table) => {
-    table.integer("recipe_id");
-    table.integer("ingredient_id");
+    table
+      .integer("ingredient_id")
+      .references("id")
+      .inTable("ingredients")
+      .onDelete("SET NULL")
+      .onUpdate("CASCADE");
     table.text("ingredient_quantity").notNull();
   });
 };
